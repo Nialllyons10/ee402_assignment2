@@ -21,4 +21,10 @@ public class DateTimeService
 	 Date d = this.calendar.getTime();
      return "The Raspberry Pi time is: " + d.toString();	
    }	
+   
+   public String getDateAndTimeTwo()
+   {
+	 Date d = this.calendar.getTime();
+     return "The Raspberry Pi 2 time is: " + d.toString();	
+   }	
 }
