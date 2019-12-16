@@ -9,14 +9,12 @@ public class ThreadedConnectionHandler extends Thread
     private ObjectInputStream is = null;			// Input stream
     private ObjectOutputStream os = null;			// Output stream
     private DateTimeService theDateService;
-//    private DateTimeService theDateServiceTwo;
     
 	// The constructor for the connection handler
     public ThreadedConnectionHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         //Set up a service object to get the current date and time
         theDateService = new DateTimeService();
-//        theDateServiceTwo = new DateTimeService();
     }
 
     // Will eventually be the thread execution method - can't pass the exception back
@@ -49,7 +47,7 @@ public class ThreadedConnectionHandler extends Thread
         // invoke the appropriate function based on the command 
         if (s.equalsIgnoreCase("GetDate")){ 
             this.getDate(); 
-        }
+        }       
         else { 
             this.sendError("Invalid command: " + s); 
         }
@@ -61,11 +59,6 @@ public class ThreadedConnectionHandler extends Thread
         String currentDateTimeText = theDateService.getDateAndTime();
         this.send(currentDateTimeText);
     }
-    
-//    private void getTemp() {	// use the date service to get the date
-//        String currentDateTimeText = theDateServiceTwo.getDateAndTime();
-//        this.send(currentDateTimeText);
-//    }
 
     // Send a generic object back to the client 
     private void send(Object o) {
