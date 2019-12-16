@@ -9,14 +9,14 @@ public class ThreadedConnectionHandler extends Thread
     private ObjectInputStream is = null;			// Input stream
     private ObjectOutputStream os = null;			// Output stream
     private DateTimeService theDateService;
-    private DateTimeService theDateServiceTwo;
+    private TemperatureService theTempService;
     
 	// The constructor for the connection handler
     public ThreadedConnectionHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         //Set up a service object to get the current date and time
         theDateService = new DateTimeService();
-        theDateServiceTwo = new DateTimeService();
+        theTempService = new TemperatureService();
     }
 
     // Will eventually be the thread execution method - can't pass the exception back
@@ -66,7 +66,7 @@ public class ThreadedConnectionHandler extends Thread
     }
 
     private void getTemp() {	// use the date service to get the date
-        String currentDateTimeTextTwo = theDateServiceTwo.getDateAndTimeTwo();
+        float currentDateTimeTextTwo = theTempService.getTempReading();
         this.send(currentDateTimeTextTwo);
     }
     

@@ -1,6 +1,12 @@
-
-
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+import java.awt.Dimension;
 import java.io.*;
 
 public class Client {
@@ -51,13 +57,13 @@ public class Client {
     }
     
     private void getTemp() {
-    	String theDate = "GetTemp", theDateAndtime;
-    	System.out.println("01. -> Sending Command get temp (" + theDate + ") to the server...");
-    	this.send(theDate);
+    	String theTemp = "GetTemp", theDateAndtimeTemp;
+    	System.out.println("01. -> Sending Command get temp (" + theTemp + ") to the server...");
+    	this.send(theTemp);
     	try{
-    		theDateAndtime = (String) receive();
+    		theDateAndtimeTemp = (String) receive();
     		System.out.println("05. <- The Server responded with: ");
-    		System.out.println("    <- " + theDateAndtime);
+    		System.out.println("    <- " + theDateAndtimeTemp);
     	}
     	catch (Exception e){
     		System.out.println("XX. There was an invalid object sent back from the server");
@@ -65,22 +71,6 @@ public class Client {
     	System.out.println("06. -- Disconnected from Server.");
     }
     
-//    private void getTemp() {
-//    	String theTempCommand = "GetTemp", theTemp;
-//    	System.out.println("01. -> Sending Command (" + theTempCommand + ") to the server...");
-//    	this.send(theTemp);
-//    	try{
-//    		theTempCommand = (String) receive();
-//    		System.out.println("05. <- The Server responded with: ");
-//    		System.out.println("    <- " + theTemp);
-//    	}
-//    	catch (Exception e){
-//    		System.out.println("XX. There was an invalid object sent back from the server");
-//    	}
-//    	System.out.println("06. -- Disconnected from Server.");
-//    }
-    
-	
     // method to send a generic object.
     private void send(Object o) {
 		try {
@@ -108,9 +98,35 @@ public class Client {
 		return o;
     }
 
+    static void createAndShowGui() {
+        List<Double> scores = new ArrayList<>();
+        Random random = new Random();
+        int maxDataPoints = 20;
+        int maxScore = 50;
+        for (int i = 0; i < maxDataPoints; i++) {
+            scores.add((double) random.nextDouble() * maxScore);
+//            scores.add((double) i);
+        }
+        Application mainPanel = new Application(scores);
+        mainPanel.setPreferredSize(new Dimension(800, 600));
+        JFrame frame = new JFrame("DrawGraph");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(mainPanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+    
     public static void main(String args[]) 
     {
     	System.out.println("**. Java Client Application - EE402 OOP Module, DCU");
+
+    	SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	createAndShowGui();
+            }
+        });
+    	
     	if(args.length==1){
     		Client theApp = new Client(args[0]);
 		    theApp.getDate();
