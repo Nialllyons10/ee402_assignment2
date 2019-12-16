@@ -66,7 +66,7 @@ public class ThreadedConnectionHandler extends Thread
     }
 
     private void getTemp() {	// use the date service to get the date
-        float currentDateTimeTextTwo = theTempService.getTempReading();
+        String currentDateTimeTextTwo = theTempService.getTempReading();
         this.send(currentDateTimeTextTwo);
     }
     
