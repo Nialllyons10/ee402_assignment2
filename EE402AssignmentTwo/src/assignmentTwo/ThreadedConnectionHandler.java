@@ -37,10 +37,8 @@ public class ThreadedConnectionHandler extends Thread
     // Receive and process incoming string commands from client socket 
     private boolean readCommand() {
         String s = null;
-        String t = null;
         try {
             s = (String) is.readObject();
-            t = (String) is.readObject();
         } 
         catch (Exception e){    // catch a general exception
         	this.closeSocket();
@@ -53,7 +51,7 @@ public class ThreadedConnectionHandler extends Thread
         if (s.equalsIgnoreCase("GetDate")){ 
             this.getDate(); 
         } 
-        else if(t.equalsIgnoreCase("GetTemp")) { 
+        else if(s.equalsIgnoreCase("GetTemp")) { 
         	this.getTemp();
         }
         else { 
