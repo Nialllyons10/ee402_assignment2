@@ -9,13 +9,14 @@ public class ThreadedConnectionHandler extends Thread
     private ObjectInputStream is = null;			// Input stream
     private ObjectOutputStream os = null;			// Output stream
     private DateTimeService theDateService;
-//    private SendTempReadings theTempService;
+    private DateTimeService theDateServiceTwo;
     
 	// The constructor for the connection handler
     public ThreadedConnectionHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         //Set up a service object to get the current date and time
         theDateService = new DateTimeService();
+        theDateServiceTwo = new DateTimeService();
 //        theTempService = new SendTempReadings();
     }
 
@@ -82,7 +83,7 @@ public class ThreadedConnectionHandler extends Thread
     }
     
     private void getTemp() {	// use the date service to get the date
-        String currentDateTimeText = theDateService.getDateAndTime();
+        String currentDateTimeText = theDateServiceTwo.getDateAndTime();
         this.send(currentDateTimeText);
     }
 
