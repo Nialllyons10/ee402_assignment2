@@ -9,15 +9,14 @@ public class ThreadedConnectionHandler extends Thread
     private ObjectInputStream is = null;			// Input stream
     private ObjectOutputStream os = null;			// Output stream
     private DateTimeService theDateService;
-    private DateTimeService theDateServiceTwo;
+//    private DateTimeService theDateServiceTwo;
     
 	// The constructor for the connection handler
     public ThreadedConnectionHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         //Set up a service object to get the current date and time
         theDateService = new DateTimeService();
-        theDateServiceTwo = new DateTimeService();
-//        theTempService = new SendTempReadings();
+//        theDateServiceTwo = new DateTimeService();
     }
 
     // Will eventually be the thread execution method - can't pass the exception back
@@ -50,29 +49,12 @@ public class ThreadedConnectionHandler extends Thread
         // invoke the appropriate function based on the command 
         if (s.equalsIgnoreCase("GetDate")){ 
             this.getDate(); 
-        } 
-        else if(s.equalsIgnoreCase("GetTemp")) { 
-        	this.getTemp();
         }
         else { 
             this.sendError("Invalid command: " + s); 
         }
         return true;
     }
-    
-//	private ReadingsMessage sendReadings(ReadingsMessage readings) {
-//		System.out.println("01. -> Sending readings to the client...");
-//		this.send(readings);
-//		try{
-//			readings = (ReadingsMessage) receive();
-//			System.out.println("05. <- The client responded");
-//		}
-//		catch (Exception e){
-//			System.out.println("XX. There was an invalid object sent back from the server");
-//		}
-//		System.out.println("06. -- Disconnected from Server.");
-//		return readings;
-//	}
 
     // Use our custom DateTimeService Class to get the date and time
     private void getDate() {	// use the date service to get the date
@@ -80,10 +62,10 @@ public class ThreadedConnectionHandler extends Thread
         this.send(currentDateTimeText);
     }
     
-    private void getTemp() {	// use the date service to get the date
-        String currentDateTimeText = theDateServiceTwo.getDateAndTime();
-        this.send(currentDateTimeText);
-    }
+//    private void getTemp() {	// use the date service to get the date
+//        String currentDateTimeText = theDateServiceTwo.getDateAndTime();
+//        this.send(currentDateTimeText);
+//    }
 
     // Send a generic object back to the client 
     private void send(Object o) {
