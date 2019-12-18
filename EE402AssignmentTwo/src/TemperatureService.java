@@ -5,45 +5,38 @@ import java.io.Serializable;
 public class TemperatureService implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private float temperature; 
 	
 	public TemperatureService() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public String getTempReading() { 
-		String tempC = this.getCurrentTempRPi();
+	public Double getTempReading() { 
+		Double tempC = this.getCurrentTempRPi();
 		return tempC;
 	}
-	
-	
-	public String getCurrentTempRPi() { 
-		String fileName = "/sys/class/thermal/thermal_zone0/temp";
-        String line = null;
+
+	public Double getCurrentTempRPi() { 
+		String tempFileName = "/sys/class/thermal/thermal_zone0/temp";
+        String lineInFile = null;
         float current_temp = 0; 
         
         try {
-            FileReader fileReader = new FileReader(fileName);
-
+            FileReader fileReader = new FileReader(tempFileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            while((line = bufferedReader.readLine()) != null) {
-            	current_temp = (Integer.parseInt(line) / 1000);
-                System.out.println("Temp °C: " + current_temp);
+            while((lineInFile = bufferedReader.readLine()) != null) {
+            	current_temp = (Integer.parseInt(lineInFile) / 1000);
             }
-            
-            bufferedReader.close();
-            
+            bufferedReader.close();    
         }
         catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + fileName + "'");
+            System.out.println("The file cannot be opened '" + tempFileName + "'");
         }
         catch(IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'");
+            System.out.println("There is an error reading this '" + tempFileName + "'");
         }
-        
-        String str = String.valueOf(current_temp);
-		return str;
+  
+        double current_temp1 = (double) current_temp;
+		return current_temp1;
 	}
 	
 	public void display(){

@@ -166,22 +166,20 @@ public class Client {
     	List<Double> scores = new ArrayList<>();
         Random random = new Random();
         int maxDataPoints = 20;
-        int maxScore = 10;
+        int maxScore = 50;
+        int minScore = 10;
         for (int i = 0; i < maxDataPoints; i++) {
-            scores.add((double) random.nextDouble() * maxScore);
-//            scores.add((double) i);
+            scores.add(random.nextDouble() * (maxScore - minScore) + 1);
         }
         
     	Application app = new Application(scores);
     	SwingUtilities.invokeLater(new Runnable() {
     		public void run() {
-    			app.createAndShowGui(scores);
+    			Application.createAndShowGui(scores);
     		}
     	});
     	
     	System.out.println("The final vector is: " + v);
-//    	ArrayList<String> arraylist = new ArrayList<String>(v);
-//    	ArrayList<Double> arraylist1 = new ArrayList<Double>(arraylist);
     	System.out.println("**. End of Application.");
     }
 }

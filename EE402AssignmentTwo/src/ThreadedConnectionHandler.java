@@ -75,7 +75,7 @@ public class ThreadedConnectionHandler extends Thread
     }
 
     private void getTemp() {	
-        String currentTempo = theTempService.getTempReading();
+        Double currentTempo = theTempService.getTempReading();
         this.send(currentTempo);
     }
     

@@ -22,19 +22,12 @@ public class SendReadings implements Serializable{
 		return dateAndTime.getDateAndTime();
 	}
 	
-	public String getTemp() { 
+	public Double getTemp() { 
 		return temp.getTempReading();
 	}
 	
-	public Vector<String> buildVect() throws UnknownHostException { 
-		readings.add(getServerName());
-		readings.add(getDateAndTime(dateAndTime));
-		readings.add(getTemp());
-		return readings;
-	}
-	
 	public String display()  { 
-		String fullReading = "Reading is ";
+		String fullReading = "Reading is " + getTemp() + " and the date and time is: " + getDateAndTime(dateAndTime) + "";
 		return fullReading;
 	}
 	
