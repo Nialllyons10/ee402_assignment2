@@ -26,9 +26,10 @@ public class SendReadings implements Serializable{
 		return temp.getTempReading();
 	}
 	
-//	public String display()  { 
+	public String display()  { 
 //		String fullReading = "Reading is " + getTemp() + " and the date and time is: " + getDateAndTime(dateAndTime) + "";
-//		return fullReading;
-//	}
+		String fullReading = "Reading is 42 Degrees and the date and time is: ";
+		return fullReading;
+	}
 	
 }
