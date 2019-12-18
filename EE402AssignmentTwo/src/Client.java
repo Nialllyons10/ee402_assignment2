@@ -135,7 +135,7 @@ public class Client {
     	
     	if(args.length==1){
     		Client theApp = new Client(args[0]);
-    		for(int i = 0; i < 4; i++) { 
+    		for(int i = 0; i <= 20; i++) { 
 			    theApp.getDate();
 			    theApp.getTemp();
 			    theApp.getReadings();
