@@ -1,27 +1,10 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.*;
-import java.util.*;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.*;
 
-public class Application extends JPanel{
+public class Application extends JPanel implements ActionListener{
 	
     private int thePadding = 30;
     private int thelabelPadding = 30;
@@ -31,10 +14,12 @@ public class Application extends JPanel{
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private int pointWidth = 5;
     private int numberYDivisions = 10;
-    private List<Double> scores;
+    private List<Double> temps;
+    private static JButton button1, button2, button3;
+    private static JTextField minTemp, maxTemp, avTemp;
 
-    public Application(List<Double> scores) {
-        this.scores = scores;
+    public Application(List<Double> temps) {
+        this.temps = temps;
     }
   
     protected void paintComponent(Graphics g) {
@@ -42,13 +27,13 @@ public class Application extends JPanel{
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        double xScale = ((double) getWidth() - (2 * thePadding) - thelabelPadding) / (scores.size() - 1);
-        double yScale = ((double) getHeight() - 2 * thePadding - thelabelPadding) / (getMaxScore() - getMinScore());
+        double xScale = ((double) getWidth() - (2 * thePadding) - thelabelPadding) / (temps.size() - 1);
+        double yScale = ((double) getHeight() - 2 * thePadding - thelabelPadding) / (getMaxTemp() - getMinTemp());
 
         List<Point> graphPoints = new ArrayList<>();
-        for (int i = 0; i < scores.size(); i++) {
+        for (int i = 0; i < temps.size(); i++) {
             int x1 = (int) (i * xScale + thePadding + thelabelPadding);
-            int y1 = (int) ((getMaxScore() - scores.get(i)) * yScale + thePadding);
+            int y1 = (int) ((getMaxTemp() - temps.get(i)) * yScale + thePadding);
             graphPoints.add(new Point(x1, y1));
         }
 
@@ -63,11 +48,11 @@ public class Application extends JPanel{
             int x1 = pointWidth + thePadding + thelabelPadding;
             int y0 = getHeight() - ((i * (getHeight() - thePadding * 2 - thelabelPadding)) / numberYDivisions + thePadding + thelabelPadding);
             int y1 = y0;
-            if (scores.size() > 0) {
+            if (temps.size() > 0) {
                 g2.setColor(gridColor);
                 g2.drawLine(thePadding + thelabelPadding + 1 + pointWidth, y0, getWidth() - thePadding, y1);
                 g2.setColor(Color.BLACK);
-                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
+                String yLabel = ((int) ((getMinTemp() + (getMaxTemp() - getMinTemp()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);
                 g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
@@ -76,13 +61,13 @@ public class Application extends JPanel{
         }
 
         // and for x axis
-        for (int i = 0; i < scores.size(); i++) {
-            if (scores.size() > 1) {
-                int x0 = i * (getWidth() - thePadding * 2 - thelabelPadding) / (scores.size() - 1) + thePadding + thelabelPadding;
+        for (int i = 0; i < temps.size(); i++) {
+            if (temps.size() > 1) {
+                int x0 = i * (getWidth() - thePadding * 2 - thelabelPadding) / (temps.size() - 1) + thePadding + thelabelPadding;
                 int x1 = x0;
                 int y0 = getHeight() - thePadding - thelabelPadding;
                 int y1 = y0 - pointWidth;
-                if ((i % ((int) ((scores.size() / 20.0)) + 1)) == 0) {
+                if ((i % ((int) ((temps.size() / 20.0)) + 1)) == 0) {
                     g2.setColor(gridColor);
                     g2.drawLine(x0, getHeight() - thePadding - thelabelPadding - 1 - pointWidth, x1, thePadding);
                     g2.setColor(Color.BLACK);
@@ -121,42 +106,84 @@ public class Application extends JPanel{
         }
     }
     
-    static void createAndShowGui(List<Double> scores) {
+    static void showGui(List<Double> temps) {
     	
-    	Application mainPanel = new Application(scores);
+    	Application mainPanel = new Application(temps);
     	mainPanel.setPreferredSize(new Dimension(900, 400));
+    	
+    	maxTemp = new JTextField(10);
+    	maxTemp.setEditable(false);
+    	minTemp = new JTextField(10);
+    	minTemp.setEditable(false);
+    	avTemp = new JTextField(10);
+    	avTemp.setEditable(false);
+    	button1 = new JButton("Get Maximum Temperature");
+    	button2 = new JButton("Get Minimum Temperature");
+    	button3 = new JButton("Get Average Temperature");
+    	
     	JFrame frame = new JFrame("Raspberry Pi Temperature Graph");
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	frame.getContentPane().add(mainPanel);
+   
+    	JPanel top = new JPanel();
+    	top.setLayout(new GridLayout(3, 6));
+    	button1.addActionListener(mainPanel);
+        button2.addActionListener(mainPanel);
+        button3.addActionListener(mainPanel);
+    	top.add(button1);
+    	top.add(maxTemp);
+    	top.add(button2);
+    	top.add(minTemp);
+    	top.add(button3);
+    	top.add(avTemp);
+    	frame.add("North",top);
+    	
     	frame.pack();
     	frame.setLocationRelativeTo(null);
     	frame.setVisible(true);
     }
 
-    private double getMinScore() {
+    private double getMinTemp() {
         double minScore = Double.MAX_VALUE;
-        for (Double score : scores) {
+        for (Double score : temps) {
             minScore = Math.min(minScore, score);
         }
         return minScore;
     }
 
-    private double getMaxScore() {
-        double maxScore = Double.MIN_VALUE;
-        for (Double score : scores) {
-            maxScore = Math.max(maxScore, score);
+    private double getMaxTemp() {
+        double max = Double.MIN_VALUE;
+        for (Double temp : temps) {
+        	max = Math.max(max, temp);
         }
-        return maxScore;
+        return max;
     }
 
-    public void setScores(List<Double> scores) {
-        this.scores = scores;
+    public void setTemps(List<Double> temps) {
+        this.temps = temps;
         invalidate();
         this.repaint();
     }
 
-    public List<Double> getScores() {
-        return scores;
+    public List<Double> getTemps() {
+        return temps;
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getActionCommand().equals("Get Maximum Temperature")){
+        	maxTemp.setText("Max Temp is 42°C");
+        }
+        else if (e.getActionCommand().equals("Get Minimum Temperature")){
+        	minTemp.setText("Min Temp is 41°C");
+        }
+        else if (e.getActionCommand().equals("Get Average Temperature")){
+        	avTemp.setText("Min Temp is 33°C");
+        }
+        else{
+          System.out.print("No press");
+        }
+    
     }
 
 }

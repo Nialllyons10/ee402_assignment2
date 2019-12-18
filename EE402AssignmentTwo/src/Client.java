@@ -1,16 +1,8 @@
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.Random;
 import java.util.Vector;
-import java.util.stream.Collectors;
-
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
-import java.awt.Dimension;
 import java.io.*;
 
 public class Client {
@@ -21,7 +13,7 @@ public class Client {
     private ObjectInputStream is = null;
 
 //    private static List<String> v;
-    private static Vector<Double> v = new Vector<Double>();
+    private static Vector<Double> temperatures = new Vector<Double>();
     
     
 	// the constructor expects the IP address of the server - the port is fixed
@@ -118,7 +110,7 @@ public class Client {
 	    catch (Exception e) {
 		    System.out.println("XX. Exception Occurred on Receiving:" + e.toString());
 		}
-		v.add((Double) o);
+		temperatures.add((Double) o);
 		return o;
     }
     
@@ -158,22 +150,29 @@ public class Client {
     	}  
     	
     	
-    	List<Double> scores = new ArrayList<>();
+    	List<Double> temps = new ArrayList<>();
         Random random = new Random();
         int maxDataPoints = 20;
-        int maxScore = 50;
-        int minScore = 10;
+        int maxTemp = 50;
+        int minTemp = 10;
         for (int i = 0; i < maxDataPoints; i++) {
-            scores.add(random.nextDouble() * (maxScore - minScore) + 1);
+        	temps.add(random.nextDouble() * (maxTemp - minTemp) + 1);
         }
-        System.out.println(scores);
         
-    	Application app = new Application(scores);
+        
+    	Application app = new Application(temps);
     	SwingUtilities.invokeLater(new Runnable() {
     		public void run() {
-    			app.createAndShowGui(scores);
+    			app.showGui(temps);
     		}
     	});
+    	
+    	Object max = Collections.max(temperatures); 
+    	Object min = Collections.min(temperatures);
+    	System.out.println("RPi last 20 read temperatures: " + temperatures + "");
+    	System.out.println("RPi last 20 read temperatures maximum: " + max + "");
+    	System.out.println("RPi last 20 read temperatures minimum: " + min + "");
+    	
     	System.out.println("**. End of Application.");
     }
 }
