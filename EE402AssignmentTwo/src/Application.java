@@ -19,6 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import java.awt.*;
+import javax.swing.*;
+
 public class Application extends JPanel{
 	
 	private int width = 800;
@@ -36,7 +39,6 @@ public class Application extends JPanel{
     public Application(List<Double> scores) {
         this.scores = scores;
     }
-
   
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -121,11 +123,19 @@ public class Application extends JPanel{
             g2.fillOval(x, y, ovalW, ovalH);
         }
     }
+    
+    static void createAndShowGui(List<Double> scores) {
+    	
+    	Application mainPanel = new Application(scores);
+    	mainPanel.setPreferredSize(new Dimension(800, 600));
+    	JFrame frame = new JFrame("Raspberry Pi Temperature Graph");
+    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	frame.getContentPane().add(mainPanel);
+    	frame.pack();
+    	frame.setLocationRelativeTo(null);
+    	frame.setVisible(true);
+    }
 
-//    @Override
-//    public Dimension getPreferredSize() {
-//        return new Dimension(width, heigth);
-//    }
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
         for (Double score : scores) {

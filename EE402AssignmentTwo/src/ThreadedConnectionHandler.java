@@ -1,6 +1,5 @@
-
-
 import java.net.*;
+import java.util.Vector;
 import java.io.*;
 
 public class ThreadedConnectionHandler extends Thread
@@ -10,6 +9,7 @@ public class ThreadedConnectionHandler extends Thread
     private ObjectOutputStream os = null;			// Output stream
     private DateTimeService theDateService;
     private TemperatureService theTempService;
+    private SendReadings theSendReadings;
     
 	// The constructor for the connection handler
     public ThreadedConnectionHandler(Socket clientSocket) {
@@ -17,6 +17,7 @@ public class ThreadedConnectionHandler extends Thread
         //Set up a service object to get the current date and time
         theDateService = new DateTimeService();
         theTempService = new TemperatureService();
+        theSendReadings = new SendReadings();
     }
 
     // Will eventually be the thread execution method - can't pass the exception back
@@ -34,7 +35,7 @@ public class ThreadedConnectionHandler extends Thread
     }
 
     // Receive and process incoming string commands from client socket 
-    private boolean readCommand() {
+    private boolean readCommand() throws UnknownHostException {
         String s = null;
         try {
             s = (String) is.readObject();
@@ -53,6 +54,9 @@ public class ThreadedConnectionHandler extends Thread
         else if(s.equalsIgnoreCase("GetTemp")) { 
         	this.getTemp();
         }
+        else if(s.equalsIgnoreCase("GetReadings")){ 
+        	this.getReadings();
+        }
         else { 
             this.sendError("Invalid command: " + s); 
         }
@@ -64,10 +68,15 @@ public class ThreadedConnectionHandler extends Thread
         String currentDateTimeText = theDateService.getDateAndTime();
         this.send(currentDateTimeText);
     }
+    
+    private void getReadings() {
+        String currentReadings = theSendReadings.display();
+        this.send(currentReadings);
+    }
 
-    private void getTemp() {	// use the date service to get the date
-        String currentDateTimeTextTwo = theTempService.getTempReading();
-        this.send(currentDateTimeTextTwo);
+    private void getTemp() {	
+        String currentTempo = theTempService.getTempReading();
+        this.send(currentTempo);
     }
     
     // Send a generic object back to the client 

@@ -1,7 +1,11 @@
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -16,6 +20,10 @@ public class Client {
     private ObjectOutputStream os = null;
     private ObjectInputStream is = null;
 
+//    private static List<String> v;
+    private static Vector<String> v = new Vector<String>();
+    
+    
 	// the constructor expects the IP address of the server - the port is fixed
     public Client(String serverIP) {
     	if (!connectToServer(serverIP)) {
@@ -61,9 +69,24 @@ public class Client {
     	System.out.println("01. -> Sending Command get temp (" + theTemp + ") to the server...");
     	this.send(theTemp);
     	try{
-    		theDateAndtimeTemp = (String) receive();
+    		theDateAndtimeTemp = (String) receiveTemp();
     		System.out.println("05. <- The Server responded with: ");
     		System.out.println("    <- " + theDateAndtimeTemp);
+    	}
+    	catch (Exception e){
+    		System.out.println("XX. There was an invalid object sent back from the server");
+    	}
+    	System.out.println("06. -- Disconnected from Server.");
+    }
+    
+    private void getReadings() {
+    	String theReadings = "GetReadings", theReadingData;
+    	System.out.println("01. -> Sending Command get temp (" + theReadings + ") to the server...");
+    	this.send(theReadings);
+    	try{
+    		theReadingData = (String) receive();
+    		System.out.println("05. <- The Server responded with: ");
+    		System.out.println("    <- " + theReadingData);
     	}
     	catch (Exception e){
     		System.out.println("XX. There was an invalid object sent back from the server");
@@ -84,6 +107,26 @@ public class Client {
     }
 
     // method to receive a generic object.
+    private Object receiveTemp() 
+    {
+		Object o = null;
+		try {
+			System.out.println("03. -- About to receive an object...");
+		    o = is.readObject();
+		    System.out.println("04. <- Object received...");  
+		} 
+	    catch (Exception e) {
+		    System.out.println("XX. Exception Occurred on Receiving:" + e.toString());
+		}
+		v.add((String) o);
+		return o;
+    }
+    
+//    private void getVector(){ 
+//    	Object x = receiveTemp();
+//    	v.add((String) x);
+//    }
+    
     private Object receive() 
     {
 		Object o = null;
@@ -91,6 +134,7 @@ public class Client {
 			System.out.println("03. -- About to receive an object...");
 		    o = is.readObject();
 		    System.out.println("04. <- Object received...");
+		    
 		} 
 	    catch (Exception e) {
 		    System.out.println("XX. Exception Occurred on Receiving:" + e.toString());
@@ -98,46 +142,46 @@ public class Client {
 		return o;
     }
 
-    static void createAndShowGui() {
-        List<Double> scores = new ArrayList<>();
-        Random random = new Random();
-        int maxDataPoints = 20;
-        int maxScore = 50;
-        for (int i = 0; i < maxDataPoints; i++) {
-            scores.add((double) random.nextDouble() * maxScore);
-//            scores.add((double) i);
-        }
-        Application mainPanel = new Application(scores);
-        mainPanel.setPreferredSize(new Dimension(800, 600));
-        JFrame frame = new JFrame("DrawGraph");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(mainPanel);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
-    
-    public static void main(String args[]) 
+    public static void main(String args[]) throws InterruptedException 
     {
     	System.out.println("**. Java Client Application - EE402 OOP Module, DCU");
-
-    	SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-            	createAndShowGui();
-            }
-        });
     	
     	if(args.length==1){
     		Client theApp = new Client(args[0]);
-		    theApp.getDate();
-		    theApp.getTemp();
+    		for(int i = 0; i < 4; i++) { 
+			    theApp.getDate();
+			    theApp.getTemp();
+			    theApp.getReadings();
+			    Thread.sleep(400);
+    		}
 		}
     	else
     	{
     		System.out.println("Error: you must provide the address of the server");
     		System.out.println("Usage is:  java Client x.x.x.x  (e.g. java Client 192.168.7.2)");
     		System.out.println("      or:  java Client hostname (e.g. java Client localhost)");
-    	}    
+    	}  
+    	
+    	
+    	List<Double> scores = new ArrayList<>();
+        Random random = new Random();
+        int maxDataPoints = 20;
+        int maxScore = 10;
+        for (int i = 0; i < maxDataPoints; i++) {
+            scores.add((double) random.nextDouble() * maxScore);
+//            scores.add((double) i);
+        }
+        
+    	Application app = new Application(scores);
+    	SwingUtilities.invokeLater(new Runnable() {
+    		public void run() {
+    			app.createAndShowGui(scores);
+    		}
+    	});
+    	
+    	System.out.println("The final vector is: " + v);
+//    	ArrayList<String> arraylist = new ArrayList<String>(v);
+//    	ArrayList<Double> arraylist1 = new ArrayList<Double>(arraylist);
     	System.out.println("**. End of Application.");
     }
 }
