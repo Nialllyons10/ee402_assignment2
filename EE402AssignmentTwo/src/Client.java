@@ -171,11 +171,12 @@ public class Client {
         for (int i = 0; i < maxDataPoints; i++) {
             scores.add(random.nextDouble() * (maxScore - minScore) + 1);
         }
+       
         
     	Application app = new Application(scores);
     	SwingUtilities.invokeLater(new Runnable() {
     		public void run() {
-    			Application.createAndShowGui(scores);
+    			app.createAndShowGui(scores);
     		}
     	});
     	
