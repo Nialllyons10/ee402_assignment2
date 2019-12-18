@@ -128,6 +128,14 @@ public class Client {
 		}
 		return o;
     }
+    
+    private static double averageTemp(Vector<Double> x) { 
+    	double sum = 0.0;
+    	for(double i : x)
+    		sum += i;
+    	
+    	return sum / x.size();
+    }
 
     public static void main(String args[]) throws InterruptedException 
     {
@@ -172,6 +180,7 @@ public class Client {
     	System.out.println("RPi last 20 read temperatures: " + temperatures + "");
     	System.out.println("RPi last 20 read temperatures maximum: " + max + "");
     	System.out.println("RPi last 20 read temperatures minimum: " + min + "");
+    	System.out.println("RPi last 20 read temperatures average: " + averageTemp(temperatures) + "");
     	
     	System.out.println("**. End of Application.");
     }
