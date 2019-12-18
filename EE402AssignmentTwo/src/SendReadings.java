@@ -27,7 +27,7 @@ public class SendReadings implements Serializable{
 	}
 	
 	public String display()  { 
-		String fullReading = "Reading is " + getTemp() + " and the date and time is: " + getDateAndTime(dateAndTime) + "";
+		String fullReading = "Reading is " +  getDateAndTime(dateAndTime) + "";
 		return fullReading;
 	}
 	
