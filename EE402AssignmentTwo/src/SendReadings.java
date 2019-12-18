@@ -22,13 +22,13 @@ public class SendReadings implements Serializable{
 		return dateAndTime.getDateAndTime();
 	}
 	
-	public Double getTemp() { 
-		return temp.getTempReading();
-	}
+//	public Double getTemp() { 
+//		return temp.getTempReading();
+//	}
 	
 	public String display()  { 
 //		String fullReading = "Reading is " + getTemp() + " and the date and time is: " + getDateAndTime(dateAndTime) + "";
-		String fullReading = "Reading is 42 Degrees and the date and time is: ";
+		String fullReading = "Reading is 42 Degrees and the date and time is: Wed Dec 14 19:22:54 UTC 2019";
 		return fullReading;
 	}
 	

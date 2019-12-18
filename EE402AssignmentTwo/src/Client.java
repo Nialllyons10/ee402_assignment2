@@ -21,7 +21,7 @@ public class Client {
     private ObjectInputStream is = null;
 
 //    private static List<String> v;
-    private static Vector<String> v = new Vector<String>();
+    private static Vector<Double> v = new Vector<Double>();
     
     
 	// the constructor expects the IP address of the server - the port is fixed
@@ -118,14 +118,9 @@ public class Client {
 	    catch (Exception e) {
 		    System.out.println("XX. Exception Occurred on Receiving:" + e.toString());
 		}
-		v.add((String) o);
+		v.add((Double) o);
 		return o;
     }
-    
-//    private void getVector(){ 
-//    	Object x = receiveTemp();
-//    	v.add((String) x);
-//    }
     
     private Object receive() 
     {
@@ -171,7 +166,7 @@ public class Client {
         for (int i = 0; i < maxDataPoints; i++) {
             scores.add(random.nextDouble() * (maxScore - minScore) + 1);
         }
-       
+        System.out.println(scores);
         
     	Application app = new Application(scores);
     	SwingUtilities.invokeLater(new Runnable() {
@@ -179,8 +174,6 @@ public class Client {
     			app.createAndShowGui(scores);
     		}
     	});
-    	
-    	System.out.println("The final vector is: " + v);
     	System.out.println("**. End of Application.");
     }
 }
